@@ -3,7 +3,7 @@ import Dashboard from './components/Dashboard.jsx';
 import './App.css';
 
 // API base URL - points to your backend
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'https://expensetracker-backend-cuvv.onrender.com/api';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
