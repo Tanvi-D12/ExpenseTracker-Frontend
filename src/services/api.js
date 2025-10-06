@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = "https://expense-tracker-backend-k52q.onrender.com/api";
+const API_BASE_URL = "https://expensetracker-backend-cuvv.onrender.com/api";
 
 // Create axios instance with default config
 export const api = axios.create({
