@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="AI-powered expense tracker with receipt scanning. Manage your finances smartly." />
+    <meta name="theme-color" content="#8B008B" />
+    <title>💰 Smart Expense Tracker - AI Receipt Scanner</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+     
+    <style>
+      /* YOUR COLORS WITH DARK MAGENTA */
+      body {
+        margin: 0;
+        background: linear-gradient(135deg, #9370DB 0%, #7B68EE 50%, #8B008B 100%) !important;
+        background-attachment: fixed !important;
+        background-size: cover !important;
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: white;
+        min-height: 100vh;
+        padding: 0 !important;
+      }
+      
+      html {
+        background: linear-gradient(135deg, #9370DB 0%, #7B68EE 50%, #8B008B 100%) !important;
+      }
+      
+      #root {
+        background: transparent !important;
+        color: white !important;
+      }
+      
+      /* DARK MAGENTA FOR NAVIGATION WITH EFFECTS */
+      #root .tabs-nav {
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(20, 0, 20, 0.95)) !important;
+        backdrop-filter: blur(25px) !important;
+        border-bottom: 3px solid #8B008B !important;
+        box-shadow: 0 10px 40px rgba(139, 0, 139, 0.6) !important;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      #root .tabs-nav::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(139, 0, 139, 0.3), transparent);
+        transition: left 0.5s;
+      }
+      
+      #root .tabs-nav:hover::before {
+        left: 100%;
+      }
+      
+      #root .tab-btn {
+        background: rgba(139, 0, 139, 0.3) !important;
+        border: 2px solid transparent !important;
+        border-radius: 15px !important;
+        margin: 0 10px !important;
+        padding: 1.2rem 2rem !important;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      #root .tab-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s;
+      }
+      
+      #root .tab-btn:hover::before {
+        left: 100%;
+      }
+      
+      #root .tab-btn:hover {
+        background: linear-gradient(135deg, rgba(139, 0, 139, 0.6), rgba(123, 104, 238, 0.6)) !important;
+        border: 2px solid #9B30B9 !important;
+        transform: translateY(-3px) scale(1.05) !important;
+        box-shadow: 0 8px 25px rgba(139, 0, 139, 0.5) !important;
+      }
+      
+      #root .tab-btn.active {
+        background: linear-gradient(135deg, #8B008B, #7B68EE) !important;
+        border: 2px solid #FF00FF !important;
+        box-shadow: 0 0 20px rgba(139, 0, 139, 0.8), 0 8px 30px rgba(255, 0, 255, 0.4) !important;
+        transform: translateY(-2px) scale(1.02) !important;
+      }
+      
+      #root .tab-btn.active::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        height: 3px;
+        background: #FF00FF;
+        border-radius: 2px;
+        box-shadow: 0 0 10px #FF00FF;
+      }
+      
+      /* DARK MAGENTA FOR STAT CARDS */
+      #root .stat-card {
+        background: linear-gradient(135deg, rgba(139, 0, 139, 0.9), rgba(123, 104, 238, 0.9)) !important;
+        border: 2px solid #8B008B !important;
+        box-shadow: 0 8px 32px rgba(139, 0, 139, 0.4) !important;
+      }
+      
+      #root .stat-card:hover {
+        background: linear-gradient(135deg, rgba(139, 0, 139, 1), rgba(123, 104, 238, 1)) !important;
+        border: 2px solid #9B30B9 !important;
+        transform: translateY(-5px) !important;
+      }
+      
+      /* DARK MAGENTA FOR CHARTS */
+      #root .chart-card {
+        background: rgba(0, 0, 0, 0.7) !important;
+        border: 2px solid #8B008B !important;
+        backdrop-filter: blur(20px) !important;
+      }
+      
+      /* Donut Chart Colors */
+      #root .recharts-pie-sector {
+        stroke: #000 !important;
+        stroke-width: 2 !important;
+      }
+      
+      #root .recharts-pie-sector:nth-child(1) { fill: #8B008B !important; }
+      #root .recharts-pie-sector:nth-child(2) { fill: #9B30B9 !important; }
+      #root .recharts-pie-sector:nth-child(3) { fill: #AB47C7 !important; }
+      #root .recharts-pie-sector:nth-child(4) { fill: #BB5FD5 !important; }
+      #root .recharts-pie-sector:nth-child(5) { fill: #CB77E3 !important; }
+      #root .recharts-pie-sector:nth-child(6) { fill: #DB8FF1 !important; }
+      
+      /* Bar Chart Colors */
+      #root .recharts-bar-rectangle {
+        fill: #8B008B !important;
+        stroke: #000 !important;
+        stroke-width: 1 !important;
+      }
+      
+      #root .recharts-bar-rectangle:hover {
+        fill: #9B30B9 !important;
+      }
+      
+      /* Area Chart Colors */
+      #root .recharts-area-area:nth-child(1) {
+        fill: url(#spentGradient) !important;
+        stroke: #8B008B !important;
+      }
+      
+      #root .recharts-area-area:nth-child(2) {
+        fill: url(#budgetGradient) !important;
+        stroke: #9B30B9 !important;
+      }
+      
+      /* Chart Grid and Axes */
+      #root .recharts-cartesian-grid-horizontal line,
+      #root .recharts-cartesian-grid-vertical line {
+        stroke: rgba(255, 255, 255, 0.1) !important;
+      }
+      
+      #root .recharts-xAxis .recharts-cartesian-axis-line,
+      #root .recharts-yAxis .recharts-cartesian-axis-line {
+        stroke: rgba(255, 255, 255, 0.3) !important;
+      }
+      
+      #root .recharts-xAxis .recharts-cartesian-axis-tick-value,
+      #root .recharts-yAxis .recharts-cartesian-axis-tick-value {
+        fill: rgba(255, 255, 255, 0.8) !important;
+        font-weight: 600 !important;
+      }
+      
+      /* Chart Tooltips */
+      #root .recharts-tooltip-wrapper {
+        background: rgba(0, 0, 0, 0.9) !important;
+        border: 2px solid #8B008B !important;
+        border-radius: 10px !important;
+        backdrop-filter: blur(20px) !important;
+      }
+      
+      /* Category Legend */
+      #root .legend-item {
+        background: rgba(139, 0, 139, 0.3) !important;
+        border: 1px solid #8B008B !important;
+      }
+      
+      #root .legend-item:hover {
+        background: rgba(139, 0, 139, 0.6) !important;
+        border: 1px solid #9B30B9 !important;
+      }
+      
+      /* Transactions */
+      #root .transaction-item {
+        background: rgba(139, 0, 139, 0.2) !important;
+        border: 1px solid rgba(139, 0, 139, 0.4) !important;
+      }
+      
+      #root .transaction-item:hover {
+        background: rgba(139, 0, 139, 0.4) !important;
+        border: 1px solid #8B008B !important;
+      }
+      
+      /* FIX FOR HEADER TEXT VISIBILITY */
+      #root .header-content h1,
+      #root .dashboard-title,
+      #root h1,
+      #root h2,
+      #root h3 {
+        color: white !important;
+        background: none !important;
+        -webkit-text-fill-color: white !important;
+        text-fill-color: white !important;
+        -webkit-background-clip: border-box !important;
+        background-clip: border-box !important;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+      }
+      
+      /* Force all text to be visible */
+      #root * {
+        color: white !important;
+      }
+      
+      /* Specific fix for gradient text issues */
+      #root [class*="title"],
+      #root [class*="header"],
+      #root [class*="heading"] {
+        background: none !important;
+        -webkit-text-fill-color: white !important;
+        text-fill-color: white !important;
+      }
+      
+      #root:empty::before {
+        content: "💰 Loading Smart Expense Tracker...";
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-size: 2rem;
+        font-weight: 700;
+        color: white;
+        text-align: center;
+        padding: 2rem;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+      
+      /* Smooth loading animation */
+      #root:empty::after {
+        content: "";
+        display: block;
+        width: 60px;
+        height: 60px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top: 4px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 2rem auto;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
